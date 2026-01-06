@@ -1,0 +1,131 @@
+/* --- General Form Page Styles --- */
+.form-page-container {
+    display: flex;
+    justify-content: center;
+    padding: 80px 20px;
+}
+
+.form-wrapper {
+    width: 100%;
+    max-width: 500px;
+}
+
+.form-title {
+    font-family: 'Inter', sans-serif; /* Using sans-serif for functional titles */
+    font-weight: 600;
+    font-size: 18px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 60px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 15px;
+    background-color: #fff;
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box; 
+}
+
+.form-control:focus {
+    border-color: #333;
+}
+
+.btn-submit {
+    width: 100%;
+    background-color: #000;
+    color: #fff;
+    padding: 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: opacity 0.2s;
+    box-sizing: border-box; 
+}
+
+.btn-submit:hover {
+    opacity: 0.85;
+}
+
+/* ADD THESE NEW STYLES TO THE END OF forms.css */
+
+
+
+/* --- Photo Uploader --- */
+.photo-upload-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.photo-upload-slot {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background-color: #F9F9F9;
+    border: 1px dashed #ddd;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden; /* To contain the preview image */
+}
+
+.photo-upload-slot:first-child {
+    grid-column: span 2; /* Make the first slot bigger */
+    grid-row: span 2;
+}
+
+.photo-upload-slot label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.photo-upload-slot svg {
+    color: #aaa;
+    width: 28px;
+    height: 28px;
+}
+
+.photo-upload-slot .photo-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: 2; /* Sits on top of the icon */
+    pointer-events: none; /* Allows clicks to go through to the label */
+}
+
+
+.photo-upload-slot input[type="file"] {
+    display: none; /* The label will trigger this */
+}

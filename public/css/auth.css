@@ -1,0 +1,80 @@
+/* --- Authentication Page Styles --- */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 80px 20px;
+    min-height: 70vh;
+}
+
+.auth-form {
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+}
+
+.auth-form h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 32px;
+    margin-bottom: 60px;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 40px;
+}
+
+.form-control {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0;
+    font-size: 16px;
+    background-color: transparent;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.form-control:focus {
+    border-bottom-color: #333;
+}
+
+.form-label {
+    position: absolute;
+    top: -20px; /* Position the label above the input line */
+    left: 0;
+    font-size: 14px;
+    color: #555;
+    pointer-events: none; /* Allows clicks to go through to the input */
+}
+
+/* Specific styling for password field to allow showing/hiding */
+.password-group {
+    position: relative;
+}
+
+.btn-submit {
+    width: 100%;
+    background-color: #000;
+    color: #fff;
+    padding: 18px;
+    border: none;
+    border-radius: 0;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: opacity 0.2s;
+}
+
+.btn-submit:hover {
+    opacity: 0.85;
+}
+
+.auth-switch-link {
+    display: block;
+    margin-top: 25px;
+    font-size: 14px;
+    color: #666;
+    text-decoration: underline;
+}

@@ -1,0 +1,242 @@
+#blank{
+    height: 200px;
+}
+
+#Dash{
+    display: flex;
+    width: 1320px;
+}
+
+#DashCol h5{
+    margin-bottom: 30px;
+    margin-left: 20px;
+    padding: 6px;
+    background-color: #E6C4B5;
+}
+
+#DashCol hr{
+    margin-left: 20px;
+}
+
+#DashCol p{
+    margin-left: 20px;
+}
+
+#drop{
+    width: 150px;
+    border: 3px solid rgb(104, 104, 104);
+    border-radius: 9px;
+}
+
+#F_header{
+    margin-left: 80px;
+    margin-top: 20px;
+    display: flex;
+}
+
+#F_header h6{
+    padding: 10px;
+}
+
+
+#grayHeader{
+    width: 1320px;
+    padding: 15px;
+    margin-top: 40px;
+    margin-left: 90px;
+    margin-bottom: 20px;
+    height: 50px;
+    display: flex;
+    background-color: lightgray;;
+}
+
+#grayHeader h6{
+    margin-left: 20px;
+}
+
+#handmade{
+    background-color: lightgray;
+    height: 60px;
+    width: 350px;
+    text-align: center;
+    padding: 5px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 40px;
+}
+
+#header{
+    margin-top: 90px;
+}
+
+#Searchbutton{
+    width: 25px;
+    height: 25px;
+    border: none;
+    padding: 10px;
+    background-image: url('/Imagesaved/Search_Icon.jpg');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+#Searchbox input{
+    width: 300px;
+    height: 30px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    margin-bottom: 50px;
+    border-color: rgb(168, 165, 165);
+    outline-color: transparent !important;
+    text-align: center;
+}
+
+#LoginButton{
+    margin: 20px;
+    width: 80px;
+    padding: 8px;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+}
+#mainbox{
+    margin-top: 230px;
+    width: 650px;
+    height: 650px;
+}
+
+#mainbox h5{
+    padding-top: 30px;
+    font-size: 25px;
+}
+
+#mainbox hr{
+    height: 5px;
+}
+
+#mainbox input{
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    width:650px;
+    margin-bottom: 10px;
+    border-color: rgb(168, 165, 165);
+    outline-color: transparent !important;
+
+}
+
+#mainbox p{
+    text-align: left;
+    padding-bottom: 20px;
+}
+
+#middle{
+    padding-top: 20px;
+    padding-left: 40px;
+    height: 850px;
+}
+
+#pink{
+    padding: 5px;
+    height: 43px;
+    background-color: #E6C4B5;
+    margin-left: 90px;
+    margin-right: 0px;
+    text-align: left;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
+#Profile{
+    
+    background-image: url('/Imagesaved/Meow.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    width: 60px;
+    height: 60px;
+    margin-left: 19px;
+    margin-top: 50px;
+    margin-bottom: 130px;
+    border-radius: 100px;
+}
+#P_table{
+    width: 1300px;
+}
+
+#P_table th{
+    
+    height: 30px;
+    background-color: lightgray;
+    text-align: center;
+    border: 1px solid rgb(124, 123, 123);
+    border-collapse: collapse;
+}
+
+#P_table td{
+    
+    
+    height: 30px;
+    text-align: center;
+    border: 1px solid rgb(180, 176, 176);
+    border-collapse: collapse;
+}
+
+#right{
+    padding: 0px;
+    
+}
+
+#Searchbar{
+    background-repeat: no-repeat;
+    background-image: url('/Imagesaved/Search_Icon.jpg');
+    background-size: 10% 95%;
+}
+
+#sidebar{
+
+    background-color: black;
+    width: 218px;
+    height: 1250px;
+    padding-top: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+#BG{
+    height: 1200px;
+    padding: 0px;
+    margin: 0px;
+    display: flex;
+}
+
+#SBbutton{
+    padding: 10px;
+    width: 228px;
+    height: 50px;
+    background-color: rgb(179, 177, 177);
+    text-align: left;
+    border: solid black;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    margin-bottom: 20px;
+}
+
+#SBbutton a{
+    color: black;
+    text-decoration: none;
+    margin-left: 0px;
+    font-size: 13px;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+#ViewOrder{
+    margin-left: 80px;
+}
+
+#ViewOrder hr{
+    width: 1320px;
+    margin-bottom: 20px;
+}
+
+#ViewOrderTable{
+    width: 1320px;
+}
