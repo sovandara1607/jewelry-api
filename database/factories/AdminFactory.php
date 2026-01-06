@@ -12,20 +12,20 @@ use Illuminate\Support\Str;
  */
 class AdminFactory extends Factory
 {
-    protected $model = Admin::class;
+   protected $model = Admin::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
-    {
-        return [
-            'admin_username' => fake()->userName(),
-            'admin_email' => fake()->unique()->safeEmail(),
-            'admin_password' => Hash::make('password'),
-            'remember_token' => Str::random(10),
-        ];
-    }
+   /**
+    * Define the model's default state.
+    *
+    * @return array<string, mixed>
+    */
+   public function definition(): array
+   {
+      return [
+         'admin_username' => fake()->userName(),
+         'admin_email' => fake()->unique()->safeEmail(),
+         'admin_password' => Hash::make('password'),
+         'remember_token' => Str::random(10),
+      ];
+   }
 }

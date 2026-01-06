@@ -11,22 +11,22 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ProductFactory extends Factory
 {
-    protected $model = Product::class;
+   protected $model = Product::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
-    {
-        return [
-            'product_name' => fake()->words(3, true),
-            'product_category' => fake()->randomElement(['Electronics', 'Clothing', 'Food', 'Books', 'Toys']),
-            'product_price' => fake()->randomFloat(2, 10, 1000),
-            'product_description' => fake()->sentence(),
-            'in_stock' => fake()->numberBetween(0, 100),
-            'shop_id' => Shop::factory(),
-        ];
-    }
+   /**
+    * Define the model's default state.
+    *
+    * @return array<string, mixed>
+    */
+   public function definition(): array
+   {
+      return [
+         'product_name' => fake()->words(3, true),
+         'product_category' => fake()->randomElement(['Electronics', 'Clothing', 'Food', 'Books', 'Toys']),
+         'product_price' => fake()->randomFloat(2, 10, 1000),
+         'product_description' => fake()->sentence(),
+         'in_stock' => fake()->numberBetween(0, 100),
+         'shop_id' => Shop::factory(),
+      ];
+   }
 }
