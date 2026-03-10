@@ -11,10 +11,11 @@ use App\Models\Shop;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class FrontEndAPIController extends Controller
 {
-//CartController
+    //CartController
     public function Cartindex()
     {
         $cart = session()->get('cart', []);
@@ -29,7 +30,7 @@ class FrontEndAPIController extends Controller
                 $cartItemsByShop[$shopName] = [
                     'shop_name' => $details['shop_name'],
                     'shop_email' => $details['shop_email'],
-                    'items' => [] 
+                    'items' => []
                 ];
             }
             $cartItemsByShop[$shopName]['items'][$id] = $details;
@@ -46,9 +47,9 @@ class FrontEndAPIController extends Controller
         );
     }
 
-    
-//ProductController
-public function showProduct(Product $product)
+
+    //ProductController
+    public function showProduct(Product $product)
     {
         $product->load('images');
         $seller = $product->shop; // Assumes a 'shop' relationship exists on the Product model
@@ -60,13 +61,12 @@ public function showProduct(Product $product)
             ],
             200
         );
-
     }
 
 
-public function storeProduct(Request $request)
+    public function storeProduct(Request $request)
     {
-        $validatedData =Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'product_name' => 'required|string|max:100',
             'product_category' => 'required|string|max:50',
             'product_price' => 'required|numeric|min:0',
@@ -75,11 +75,12 @@ public function storeProduct(Request $request)
             'product_images.*' => 'image|mimes:jpeg,png,jpg,gif,webp,svg|max:10240'
         ]);
 
-        if($validatedData->fails()){
-            return response()->json(['errors'=>$validatedData->errors()],422);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
         }
+        $validatedData = $validator->validated();
         $product = Product::create([
-            'shop_id' => Auth::user()->shop->shop_id, // Use the correct primary key name
+            'shop_id' => Auth::user()->shop->shop_id,
             'product_name' => $validatedData['product_name'],
             'product_category' => $validatedData['product_category'],
             'product_price' => $validatedData['product_price'],
@@ -92,7 +93,6 @@ public function storeProduct(Request $request)
 
                 $product->images()->create([
                     'image_path' => $path,
-                    'product_id' => $product->Product_id
                 ]);
             }
         }
@@ -102,23 +102,15 @@ public function storeProduct(Request $request)
         ], 201);
     }
 
-        public function editProduct(Product $product)
+    public function editProduct(Product $product)
     {
         // Authorization Check: Make sure the logged-in user owns this product
         if (Auth::user()->shop?->shop_id !== $product->shop_id) {
             abort(403, 'Unauthorized Action'); // Stop users from editing others' products
         }
-        
+
         return response()->json([
             'product' => $product
         ], 201);
     }
 }
-
-   
-
-
-
-
-    
-

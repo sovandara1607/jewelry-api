@@ -9,33 +9,54 @@ use App\Models\Admin;
 
 class AdminAuthController extends Controller
 {
-    public function adminlogin(Request $req){
-
+    // API login (used by api.php routes)
+    public function login(Request $req)
+    {
         $admin_user = Admin::where('admin_email', $req->admin_email)->first();
 
-        if(!$admin_user || !Hash::check($req->admin_password, $admin_user->admin_password)){
-            return response()->json(['message'=>'Invalid credentials'], 401);
+        if (!$admin_user || !Hash::check($req->password, $admin_user->password)) {
+            return response()->json(['message' => 'Invalid credentials'], 401);
         }
-            return response()->json([
-                'token'=>$admin_user->createToken('admin-token')->plainTextToken,
-            ]);
+        return response()->json([
+            'token' => $admin_user->createToken('admin-token')->plainTextToken,
+        ]);
     }
 
-    public function register(Request $req){
-        $validator = Validator::make($req->all(),[
-            'admin_username'       =>'required|string|max:255',
-            'admin_email'          =>'required|email|unique:admin_email',
-            'admin_password'       =>'required|string|min:6|confirmed',
+    // Web: show admin login form
+    public function AdminLoginForm()
+    {
+        return view('Management.AdminLogin');
+    }
+
+    // Web: process admin login via session
+    public function Admin_login(Request $req)
+    {
+        $admin = Admin::where('admin_email', $req->admin_email)->first();
+
+        if (!$admin || !Hash::check($req->password, $admin->password)) {
+            return back()->withErrors(['message' => 'Invalid credentials.']);
+        }
+
+        session(['admin_id' => $admin->admin_id, 'admin_username' => $admin->admin_username]);
+        return redirect('/Dashboard');
+    }
+
+    public function register(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            'admin_username'       => 'required|string|max:255',
+            'admin_email'          => 'required|email|unique:admin,admin_email',
+            'password'             => 'required|string|min:6|confirmed',
         ]);
 
-        if($validator->fails()){
-            return response()->json(['errors'=>$validator->errors()],422);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         $admin = Admin::create([
             'admin_username' => $req->admin_username,
             'admin_email'    => $req->admin_email,
-            'admin_password' => bcrypt($req->admin_password),
+            'password'       => bcrypt($req->password),
         ]);
 
         return response()->json([
@@ -45,20 +66,22 @@ class AdminAuthController extends Controller
         ], 201);
     }
 
-    public function logout(Request $req){
+    public function logout(Request $req)
+    {
         $admin = $req->user('admin_api');
 
-        if($admin && $admin->currentAccessToken()){
+        if ($admin && $admin->currentAccessToken()) {
             $admin->currentAccessToken()->delete();
             return response()->json(['message' => 'Admin logged out successfully.']);
         }
 
-        return response()->json(['message'=>'Unauthenticated.'], 401);
+        return response()->json(['message' => 'Unauthenticated.'], 401);
     }
 
-    public function dashboard(Request $req){
+    public function dashboard(Request $req)
+    {
         return response()->json([
-            'admin' =>$req->user('admin_api'),
+            'admin' => $req->user('admin_api'),
         ]);
     }
 }

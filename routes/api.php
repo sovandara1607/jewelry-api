@@ -11,22 +11,22 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('/testAPI', function (){
+Route::get('/testAPI', function () {
     return response()->json(
         [
-            'server'=>"API Server is working..."
+            'server' => "API Server is working..."
         ],
         200
     );
 });
 
 //User Routes
-Route::prefix('user')->group(function(){
+Route::prefix('user')->group(function () {
 
     Route::post('register', [UserAuthController::class, 'register']);
     Route::post('login', [UserAuthController::class, 'login']);
 
-    Route::middleware('auth:sanctum')->group(function (){
+    Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('profile', [UserAuthController::class, 'profile']);
         Route::post('logout', [UserAuthController::class, 'logout']);
@@ -34,16 +34,16 @@ Route::prefix('user')->group(function(){
 });
 
 //Admin Routes
-Route::prefix('admin')->group(function(){
+Route::prefix('admin')->group(function () {
 
-    Route::post('register',[AdminAuthController::class, 'register']);
-    Route::post('login',[AdminAuthController::class, 'login']);
+    Route::post('register', [AdminAuthController::class, 'register']);
+    Route::post('login', [AdminAuthController::class, 'login']);
 
 
-    Route::middleware('auth::admin_api')->group(function(){
+    Route::middleware('auth:admin_api')->group(function () {
 
         Route::get('dashboard', [AdminAuthController::class, 'dashboard']);
-        Route::post('logout',[AdminAuthController::class, 'logout']);
+        Route::post('logout', [AdminAuthController::class, 'logout']);
     });
 });
 
@@ -77,8 +77,6 @@ Route::get('/shopSearchList', [BackEndAPIController::class, 'shopSearchList']);
 Route::get('/filterShopList', [BackEndAPIController::class, 'filterShopList']);
 
 
-
-
 //http://127.0.0.1:8092/api/getAllUserList
 Route::get('/getAllUserList', [BackEndAPIController::class, 'getAllUserList']);
 //http://127.0.0.1:8092/api/userSearchList
@@ -91,15 +89,18 @@ Route::get('/filterUserList', [BackEndAPIController::class, 'filterUserList']);
 
 
 //FrontEndAPIController routes
-//CartController
-//http://127.0.0.1:8092/api/Cartindex
-Route::get('/Cartindex', [FrontEndAPIController::class, 'Cartindex']);
+// Cart
+// GET http://127.0.0.1:8092/api/cart
+Route::get('/cart', [FrontEndAPIController::class, 'Cartindex']);
 
+// Public product routes
+// GET http://127.0.0.1:8092/api/product/{product}
+Route::get('/product/{product}', [FrontEndAPIController::class, 'showProduct']);
 
-//ProductController
-//http://127.0.0.1:8092/api/showProduct
-Route::get('/showProduct', [FrontEndAPIController::class, 'showProduct']);
-//http://127.0.0.1:8092/api/storeProduct
-Route::post('/storeProduct', [FrontEndAPIController::class, 'storeProduct']);
-//http://127.0.0.1:8092/api/editProduct
-Route::get('/editProduct', [FrontEndAPIController::class, 'editProduct']);
+// Protected product routes (require authentication)
+Route::middleware('auth:sanctum')->group(function () {
+    // POST http://127.0.0.1:8092/api/product
+    Route::post('/product', [FrontEndAPIController::class, 'storeProduct']);
+    // GET http://127.0.0.1:8092/api/product/{product}/edit
+    Route::get('/product/{product}/edit', [FrontEndAPIController::class, 'editProduct']);
+});

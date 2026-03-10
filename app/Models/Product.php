@@ -14,7 +14,7 @@ class Product extends Model
      * Laravel expects 'id' by default. We must specify 'Product_id'.
      * @var string
      */
-    protected $table = 'Product'; 
+    protected $table = 'product';
     protected $primaryKey = 'product_id';
 
     /**
@@ -29,14 +29,14 @@ class Product extends Model
      * We must override the default 'created_at'.
      * @var string
      */
-    const CREATED_AT = 'Date_created';
+    const CREATED_AT = 'date_created';
 
     /**
      * The name of the "updated at" column.
      * We must override the default 'updated_at'.
      * @var string
      */
-    const UPDATED_AT = 'Date_updated';
+    const UPDATED_AT = 'date_updated';
 
     /**
      * The attributes that are mass assignable.
@@ -49,24 +49,25 @@ class Product extends Model
         'product_category',
         'product_price',
         'product_description',
+        'product_images',
         'in_stock',
         'shop_id',
     ];
-    
+
     /**
      * Get all of the images for the Product.
      */
-public function images()
-{
-    return $this->hasMany(\App\Models\ProductImage::class, 'product_id', 'product_id');
-}
+    public function images()
+    {
+        return $this->hasMany(\App\Models\ProductImage::class, 'product_id', 'product_id');
+    }
     /**
- * Get the shop that owns the product.
- */
-public function shop()
-{
-    // This product belongs to a Shop.
-    // We specify the foreign key 'Shop_id' and the owner key 'Shop_id'.
-    return $this->belongsTo(Shop::class, 'shop_id', 'shop_id');
-}
+     * Get the shop that owns the product.
+     */
+    public function shop()
+    {
+        // This product belongs to a Shop.
+        // We specify the foreign key 'Shop_id' and the owner key 'Shop_id'.
+        return $this->belongsTo(Shop::class, 'shop_id', 'shop_id');
+    }
 }
