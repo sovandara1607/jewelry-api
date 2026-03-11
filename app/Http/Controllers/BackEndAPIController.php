@@ -9,12 +9,14 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Shop;
 use Illuminate\Support\Facades\DB;
+use App\Models\OrderItem;
 
 class BackEndAPIController extends Controller
 {
 
     //AdminProductController APIs----
-    public function getAllProductList(){
+    public function getAllProductList()
+    {
         $productList = DB::select("select 
         product.product_name,
         product.product_category,
@@ -23,53 +25,56 @@ class BackEndAPIController extends Controller
         shop.shop_name
         FROM product
         INNER JOIN shop ON shop.shop_id = product.shop_id");
-    
+
         return response()->json(
             [
-                'product_list'=> $productList
+                'product_list' => $productList
             ],
             200
         );
     }
 
-    public function productSearchList(Request $req){
+    public function productSearchList(Request $req)
+    {
         $search = $req->input('search');
         $productSearch = DB::table('product')->whereAny([
             'product_name',
             'product_category',
             'product_price'
-        ],'like', '%' . $search . '%')->get();
+        ], 'like', '%' . $search . '%')->get();
 
         return response()->json(
             [
-                'product_Search'=> $productSearch
+                'product_Search' => $productSearch
             ],
             200
         );
     }
 
-    public function filterProductList(Request $req){
+    public function filterProductList(Request $req)
+    {
         $category = $req->input('category');
-        if($category === 'All'){
-             $categorySearched = DB::select("select *
+        if ($category === 'All') {
+            $categorySearched = DB::select("select *
              FROM product
              ");
-        }else{        
-        $categorySearched  = DB::table('product')->whereAny([
-          'product_category'
-        ],'like', $category . '%')->get();
-    }
+        } else {
+            $categorySearched  = DB::table('product')->whereAny([
+                'product_category'
+            ], 'like', $category . '%')->get();
+        }
         return response()->json(
             [
-                'category_Searched'=> $categorySearched
+                'category_Searched' => $categorySearched
             ],
             200
         );
     }
 
 
-//AdminOrderController APIs----
-    public function getAllOrderList(){
+    //AdminOrderController APIs----
+    public function getAllOrderList()
+    {
         $orderList = DB::select("select
         order_id,
         total_amount,
@@ -81,51 +86,54 @@ class BackEndAPIController extends Controller
 
         return response()->json(
             [
-                'order_list'=> $orderList
+                'order_list' => $orderList
             ],
             200
         );
     }
 
-    public function orderSearchList(Request $req){
+    public function orderSearchList(Request $req)
+    {
         $search = $req->input('search');
         $orderSearched  = DB::table('orders')->whereAny([
             'order_id',
             'delivery_address',
             'date_created',
             'status'
-        ],'like', '%' . $search . '%')->get();
-        
+        ], 'like', '%' . $search . '%')->get();
+
         return response()->json(
             [
-                'order_Searched'=> $orderSearched
+                'order_Searched' => $orderSearched
             ],
             200
         );
     }
 
-    public function filterOrderList(Request $req){
+    public function filterOrderList(Request $req)
+    {
         $status = $req->input('status');
 
-        if($status === 'All'){
-             $statusSearched = DB::select("select *
+        if ($status === 'All') {
+            $statusSearched = DB::select("select *
              FROM orders
              ");
-        }else{        
-        $statusSearched  = DB::table('orders')->whereAny([
-          'status'
-        ],'like', $status . '%')->get();
-    }
+        } else {
+            $statusSearched  = DB::table('orders')->whereAny([
+                'status'
+            ], 'like', $status . '%')->get();
+        }
         return response()->json(
             [
-                'status_Searched'=> $statusSearched
+                'status_Searched' => $statusSearched
             ],
             200
         );
     }
 
-    public function ViewOrderItemsList(Request $req){
-        
+    public function ViewOrderItemsList(Request $req)
+    {
+
         $v_orderList = DB::select(' SELECT 
                                       orders.order_id,
                                       orders.order_date,
@@ -138,11 +146,11 @@ class BackEndAPIController extends Controller
                                 FROM 
                                    orders
                                    INNER JOIN orderitem ON orderitem.order_id = orders.order_id
-                                WHERE orders.order_id = ?',[$req->oID]);
-        
+                                WHERE orders.order_id = ?', [$req->oID]);
+
         return response()->json(
             [
-                '$vorderList'=> $v_orderList
+                '$vorderList' => $v_orderList
             ],
             200
         );
@@ -150,7 +158,8 @@ class BackEndAPIController extends Controller
 
 
     //AdminShopController APIs----
-    public function getAllShopList(){
+    public function getAllShopList()
+    {
         $shopList = DB::select("select
         shop_name,
         shop_email,
@@ -159,30 +168,34 @@ class BackEndAPIController extends Controller
         FROM shop
         ");
 
-        return response()->json([
-            'shop_list'=> $shopList
-        ],
-        200
+        return response()->json(
+            [
+                'shop_list' => $shopList
+            ],
+            200
         );
     }
 
-    public function shopSearchList(Request $req){
+    public function shopSearchList(Request $req)
+    {
         $search = $req->input('search');
         $shopSearched  = DB::table('shop')->whereAny([
             'shop_name'
-        ],'like', $search . '%')->get();
-        return response()->json([
-            'shop_Searched'=> $shopSearched
-        ],
-        200
+        ], 'like', $search . '%')->get();
+        return response()->json(
+            [
+                'shop_Searched' => $shopSearched
+            ],
+            200
         );
     }
 
-    public function filterShopList(Request $req){
+    public function filterShopList(Request $req)
+    {
         $Sname = $req->input('Sname');
 
-        if($Sname === 'All'){
-        $snameSearched = DB::select("select
+        if ($Sname === 'All') {
+            $snameSearched = DB::select("select
             shop_name,
             shop_email,
             shop_phonenumber,
@@ -191,15 +204,16 @@ class BackEndAPIController extends Controller
             order by shop_name asc
           
           ");
-        }else{
-        $snameSearched  = DB::table('shop')->whereAny([
-          'shop_name'
-        ],'like', $Sname . '%')->get();
-      }
-      return response()->json([
-            'sname_Searched'=> $snameSearched
-        ],
-        200
+        } else {
+            $snameSearched  = DB::table('shop')->whereAny([
+                'shop_name'
+            ], 'like', $Sname . '%')->get();
+        }
+        return response()->json(
+            [
+                'sname_Searched' => $snameSearched
+            ],
+            200
         );
     }
 
@@ -207,7 +221,8 @@ class BackEndAPIController extends Controller
 
 
     //AdminUserController APIs----
-    public function getAllUserList(){
+    public function getAllUserList()
+    {
         $userList = DB::select("select
         name,
         email,
@@ -215,47 +230,108 @@ class BackEndAPIController extends Controller
         FROM users order by users.name asc
         ");
 
-        return response()->json([
-            'user_list'=> $userList
-        ],
-        200
+        return response()->json(
+            [
+                'user_list' => $userList
+            ],
+            200
         );
     }
 
-    public function userSearchList(Request $req){
+    public function userSearchList(Request $req)
+    {
         $search = $req->input('search');
         $userSearched  = DB::table('users')->whereAny([
             'name'
-        ],'like', '%' . $search . '%')->get();
-        return response()->json([
-            'user_Searched'=> $userSearched
-        ],
-        200
+        ], 'like', '%' . $search . '%')->get();
+        return response()->json(
+            [
+                'user_Searched' => $userSearched
+            ],
+            200
         );
     }
 
-    public function filterUserList(Request $req){
+    public function filterUserList(Request $req)
+    {
         $name = $req->input('name');
 
-        if($name === 'All'){
-        $nameSearched = DB::select("select
+        if ($name === 'All') {
+            $nameSearched = DB::select("select
           name,
           email,
           phonenumber
           FROM users order by users.name asc
           
           ");
-        }else{
-        $nameSearched  = DB::table('users')->whereAny([
-          'name'
-        ],'like', $name . '%')->get();
-      }
-        return response()->json([
-            'name_Searched'=> $nameSearched
-        ],
-        200
+        } else {
+            $nameSearched  = DB::table('users')->whereAny([
+                'name'
+            ], 'like', $name . '%')->get();
+        }
+        return response()->json(
+            [
+                'name_Searched' => $nameSearched
+            ],
+            200
         );
     }
 
 
+    // Dashboard Stats
+    public function dashboardStats()
+    {
+        $total_users = DB::table('users')->count();
+        $total_orders = DB::table('orders')->count();
+        $total_products = DB::table('product')->count();
+        $total_shops = DB::table('shop')->count();
+
+        return response()->json([
+            'total_users' => $total_users,
+            'total_orders' => $total_orders,
+            'total_products' => $total_products,
+            'total_shops' => $total_shops,
+        ], 200);
+    }
+
+    public function chartData()
+    {
+        $dataOrder = Order::selectRaw("date_created as date, count(*) as orders")
+            ->groupBy('date')->get();
+        $dataShop = Shop::selectRaw("date_created as date, count(*) as shops")
+            ->groupBy('date')->get();
+        $dataProduct = Product::selectRaw("date_created as date, count(*) as product")
+            ->groupBy('date')->get();
+
+        return response()->json([
+            'dataOrder' => $dataOrder,
+            'dataShop' => $dataShop,
+            'dataProduct' => $dataProduct,
+        ], 200);
+    }
+
+    // View order items with product and shop names (for Backend admin)
+    public function ViewOrderItemsDetail(Request $req)
+    {
+        $v_order = DB::select('SELECT 
+            orders.order_id,
+            orders.order_date,
+            orderitem.product_id,
+            orderitem.price,
+            orderitem.quantity,
+            orders.delivery_address,
+            orders.status,
+            orders.total_amount,
+            product.product_name,
+            shop.shop_name
+        FROM orders
+            INNER JOIN orderitem ON orderitem.order_id = orders.order_id
+            INNER JOIN product ON product.product_id = orderitem.product_id
+            INNER JOIN shop ON shop.shop_id = product.shop_id
+        WHERE orders.order_id = ?', [$req->oID]);
+
+        return response()->json([
+            'order_items' => $v_order
+        ], 200);
+    }
 }

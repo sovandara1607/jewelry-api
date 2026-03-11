@@ -97,10 +97,53 @@ Route::get('/cart', [FrontEndAPIController::class, 'Cartindex']);
 // GET http://127.0.0.1:8092/api/product/{product}
 Route::get('/product/{product}', [FrontEndAPIController::class, 'showProduct']);
 
+// Public: newest products for homepage
+Route::get('/products/newest', [FrontEndAPIController::class, 'newestProducts']);
+// Public: browse/search products
+Route::get('/products/browse', [FrontEndAPIController::class, 'browseProducts']);
+// Public: shop page
+Route::get('/shops/{handle}/public', [FrontEndAPIController::class, 'shopPublic']);
+// Public: get product for cart
+Route::get('/products/{product}/detail', [FrontEndAPIController::class, 'getProductForCart']);
+
+// Backend admin dashboard endpoints
+Route::get('/dashboardStats', [BackEndAPIController::class, 'dashboardStats']);
+Route::get('/chartData', [BackEndAPIController::class, 'chartData']);
+Route::get('/ViewOrderItemsDetail', [BackEndAPIController::class, 'ViewOrderItemsDetail']);
+
+// Frontend auth (no token required)
+Route::post('/frontend/register', [FrontEndAPIController::class, 'registerUser']);
+Route::post('/frontend/login', [FrontEndAPIController::class, 'loginUser']);
+
 // Protected product routes (require authentication)
 Route::middleware('auth:sanctum')->group(function () {
     // POST http://127.0.0.1:8092/api/product
     Route::post('/product', [FrontEndAPIController::class, 'storeProduct']);
     // GET http://127.0.0.1:8092/api/product/{product}/edit
     Route::get('/product/{product}/edit', [FrontEndAPIController::class, 'editProduct']);
+
+    // Product CRUD
+    Route::patch('/products/{product}', [FrontEndAPIController::class, 'updateProduct']);
+    Route::delete('/products/{product}', [FrontEndAPIController::class, 'destroyProduct']);
+    Route::post('/products/{product}/images', [FrontEndAPIController::class, 'addProductImages']);
+    Route::delete('/products/{product}/images/{image}', [FrontEndAPIController::class, 'deleteProductImage']);
+
+    // Shop CRUD
+    Route::post('/shops', [FrontEndAPIController::class, 'createShop']);
+    Route::get('/shops/my-dashboard', [FrontEndAPIController::class, 'shopDashboard']);
+    Route::get('/shops/my-shop', [FrontEndAPIController::class, 'getUserShop']);
+    Route::patch('/shops/{shop}', [FrontEndAPIController::class, 'updateShop']);
+    Route::post('/shops/{shop}/picture', [FrontEndAPIController::class, 'updateShopPicture']);
+
+    // Orders
+    Route::post('/orders', [FrontEndAPIController::class, 'createOrder']);
+    Route::post('/orders/accept/{orderItem}', [FrontEndAPIController::class, 'acceptOrder']);
+    Route::post('/orders/reject/{orderItem}', [FrontEndAPIController::class, 'rejectOrder']);
+
+    // User profile
+    Route::get('/user/orders', [FrontEndAPIController::class, 'userOrders']);
+    Route::post('/user/avatar', [FrontEndAPIController::class, 'updateAvatar']);
+    Route::patch('/user/profile', [FrontEndAPIController::class, 'updateProfile']);
+    Route::delete('/user/profile', [FrontEndAPIController::class, 'destroyProfile']);
+    Route::post('/frontend/logout', [FrontEndAPIController::class, 'logoutUser']);
 });
