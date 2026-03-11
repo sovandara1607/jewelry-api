@@ -89,7 +89,7 @@ class FrontEndAPIController extends Controller
             'product_name' => $validatedData['product_name'],
             'product_category' => $validatedData['product_category'],
             'product_price' => $validatedData['product_price'],
-            'product_description' => $validatedData['product_description'],
+            'product_description' => $validatedData['product_description'] ?? null,
             'in_stock' => 1,
         ]);
         // Accept either file uploads or path strings
@@ -118,7 +118,7 @@ class FrontEndAPIController extends Controller
 
         return response()->json([
             'product' => $product
-        ], 201);
+        ], 200);
     }
 
     // ---- NEW ENDPOINTS ----
@@ -290,8 +290,7 @@ class FrontEndAPIController extends Controller
 
     public function shopPublic($handle)
     {
-        $shopName = str_replace('%20', ' ', $handle);
-        $shop = Shop::where('shop_name', $shopName)->firstOrFail();
+        $shop = Shop::where('shop_name', $handle)->firstOrFail();
         $products = $shop->products()->with('images')
             ->orderBy('in_stock', 'desc')->latest('date_created')->get();
         return response()->json(['shop' => $shop, 'products' => $products], 200);

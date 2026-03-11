@@ -48,41 +48,38 @@ Route::prefix('admin')->group(function () {
 });
 
 
-//AdminController APIs
-//http://127.0.0.1:8092/api/getAllProductList
-Route::get('/getAllProductList', [BackEndAPIController::class, 'getAllProductList']);
-//http://127.0.0.1:8092/api/productSearchList
-Route::get('/productSearchList', [BackEndAPIController::class, 'productSearchList']);
-//http://127.0.0.1:8092/api/filterProductList
-Route::get('/filterProductList', [BackEndAPIController::class, 'filterProductList']);
+//AdminController APIs (protected by admin auth)
+Route::middleware('auth:admin_api')->group(function () {
+    //http://127.0.0.1:8092/api/getAllProductList
+    Route::get('/getAllProductList', [BackEndAPIController::class, 'getAllProductList']);
+    //http://127.0.0.1:8092/api/productSearchList
+    Route::get('/productSearchList', [BackEndAPIController::class, 'productSearchList']);
+    //http://127.0.0.1:8092/api/filterProductList
+    Route::get('/filterProductList', [BackEndAPIController::class, 'filterProductList']);
 
+    //http://127.0.0.1:8092/api/getAllOrderList
+    Route::get('/getAllOrderList', [BackEndAPIController::class, 'getAllOrderList']);
+    //http://127.0.0.1:8092/api/orderSearchList
+    Route::get('/orderSearchList', [BackEndAPIController::class, 'orderSearchList']);
+    //http://127.0.0.1:8092/api/filterOrderList
+    Route::get('/filterOrderList', [BackEndAPIController::class, 'filterOrderList']);
+    //http://127.0.0.1:8092/api/ViewOrderItemsList
+    Route::get('/ViewOrderItemsList', [BackEndAPIController::class, 'ViewOrderItemsList']);
 
-//http://127.0.0.1:8092/api/getAllOrderList
-Route::get('/getAllOrderList', [BackEndAPIController::class, 'getAllOrderList']);
-//http://127.0.0.1:8092/api/orderSearchList
-Route::get('/orderSearchList', [BackEndAPIController::class, 'orderSearchList']);
-//http://127.0.0.1:8092/api/filterOrderList
-Route::get('/filterOrderList', [BackEndAPIController::class, 'filterOrderList']);
-//http://127.0.0.1:8092/api/ViewOrderItemsList
-Route::get('/ViewOrderItemsList', [BackEndAPIController::class, 'ViewOrderItemsList']);
+    //http://127.0.0.1:8092/api/getAllShopList
+    Route::get('/getAllShopList', [BackEndAPIController::class, 'getAllShopList']);
+    //http://127.0.0.1:8092/api/shopSearchList
+    Route::get('/shopSearchList', [BackEndAPIController::class, 'shopSearchList']);
+    //http://127.0.0.1:8092/api/filterShopList
+    Route::get('/filterShopList', [BackEndAPIController::class, 'filterShopList']);
 
-
-
-
-//http://127.0.0.1:8092/api/getAllShopList
-Route::get('/getAllShopList', [BackEndAPIController::class, 'getAllShopList']);
-//http://127.0.0.1:8092/api/shopSearchList
-Route::get('/shopSearchList', [BackEndAPIController::class, 'shopSearchList']);
-//http://127.0.0.1:8092/api/filterShopList
-Route::get('/filterShopList', [BackEndAPIController::class, 'filterShopList']);
-
-
-//http://127.0.0.1:8092/api/getAllUserList
-Route::get('/getAllUserList', [BackEndAPIController::class, 'getAllUserList']);
-//http://127.0.0.1:8092/api/userSearchList
-Route::get('/userSearchList', [BackEndAPIController::class, 'userSearchList']);
-//http://127.0.0.1:8092/api/filterUserList
-Route::get('/filterUserList', [BackEndAPIController::class, 'filterUserList']);
+    //http://127.0.0.1:8092/api/getAllUserList
+    Route::get('/getAllUserList', [BackEndAPIController::class, 'getAllUserList']);
+    //http://127.0.0.1:8092/api/userSearchList
+    Route::get('/userSearchList', [BackEndAPIController::class, 'userSearchList']);
+    //http://127.0.0.1:8092/api/filterUserList
+    Route::get('/filterUserList', [BackEndAPIController::class, 'filterUserList']);
+});
 
 
 //----------------------------------------------------------------------
@@ -106,10 +103,12 @@ Route::get('/shops/{handle}/public', [FrontEndAPIController::class, 'shopPublic'
 // Public: get product for cart
 Route::get('/products/{product}/detail', [FrontEndAPIController::class, 'getProductForCart']);
 
-// Backend admin dashboard endpoints
-Route::get('/dashboardStats', [BackEndAPIController::class, 'dashboardStats']);
-Route::get('/chartData', [BackEndAPIController::class, 'chartData']);
-Route::get('/ViewOrderItemsDetail', [BackEndAPIController::class, 'ViewOrderItemsDetail']);
+// Backend admin dashboard endpoints (protected by admin auth)
+Route::middleware('auth:admin_api')->group(function () {
+    Route::get('/dashboardStats', [BackEndAPIController::class, 'dashboardStats']);
+    Route::get('/chartData', [BackEndAPIController::class, 'chartData']);
+    Route::get('/ViewOrderItemsDetail', [BackEndAPIController::class, 'ViewOrderItemsDetail']);
+});
 
 // Frontend auth (no token required)
 Route::post('/frontend/register', [FrontEndAPIController::class, 'registerUser']);

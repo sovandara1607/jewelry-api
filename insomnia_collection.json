@@ -17,7 +17,7 @@
       "parentId": "wrk_jewelry_api",
       "name": "Base Environment",
       "data": {
-        "base_url": "http://127.0.0.1:8000/api",
+        "base_url": "http://127.0.0.1:8092/api",
         "user_token": "",
         "admin_token": ""
       }
@@ -108,6 +108,58 @@
     },
 
     {
+      "_id": "fld_frontend_auth",
+      "_type": "request_group",
+      "parentId": "wrk_jewelry_api",
+      "name": "Frontend Auth"
+    },
+    {
+      "_id": "req_frontend_register",
+      "_type": "request",
+      "parentId": "fld_frontend_auth",
+      "name": "Frontend Register",
+      "method": "POST",
+      "url": "{{ _.base_url }}/frontend/register",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Frontend User\",\n  \"email\": \"frontend@example.com\",\n  \"phonenumber\": \"012345678\",\n  \"address\": \"Phnom Penh\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}"
+      }
+    },
+    {
+      "_id": "req_frontend_login",
+      "_type": "request",
+      "parentId": "fld_frontend_auth",
+      "name": "Frontend Login",
+      "method": "POST",
+      "url": "{{ _.base_url }}/frontend/login",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"frontend@example.com\",\n  \"password\": \"password123\"\n}"
+      }
+    },
+    {
+      "_id": "req_frontend_logout",
+      "_type": "request",
+      "parentId": "fld_frontend_auth",
+      "name": "Frontend Logout",
+      "method": "POST",
+      "url": "{{ _.base_url }}/frontend/logout",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.user_token }}" }
+      ],
+      "body": {}
+    },
+
+    {
       "_id": "fld_admin_auth",
       "_type": "request_group",
       "parentId": "wrk_jewelry_api",
@@ -173,63 +225,310 @@
     },
 
     {
-      "_id": "fld_products",
+      "_id": "fld_admin_products",
       "_type": "request_group",
       "parentId": "wrk_jewelry_api",
-      "name": "Products"
+      "name": "Admin - Products (Admin Auth)"
     },
     {
       "_id": "req_get_all_products",
       "_type": "request",
-      "parentId": "fld_products",
+      "parentId": "fld_admin_products",
       "name": "Get All Product List",
       "method": "GET",
       "url": "{{ _.base_url }}/getAllProductList",
       "headers": [
-        { "name": "Accept", "value": "application/json" }
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.admin_token }}" }
       ],
       "body": {}
     },
     {
       "_id": "req_product_search",
       "_type": "request",
-      "parentId": "fld_products",
+      "parentId": "fld_admin_products",
       "name": "Search Products",
       "method": "GET",
       "url": "{{ _.base_url }}/productSearchList?search=Gold",
       "headers": [
-        { "name": "Accept", "value": "application/json" }
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.admin_token }}" }
       ],
       "body": {}
     },
     {
       "_id": "req_filter_products",
       "_type": "request",
-      "parentId": "fld_products",
+      "parentId": "fld_admin_products",
       "name": "Filter Products by Category",
       "method": "GET",
       "url": "{{ _.base_url }}/filterProductList?category=Ring",
       "headers": [
-        { "name": "Accept", "value": "application/json" }
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.admin_token }}" }
       ],
       "body": {}
     },
     {
       "_id": "req_filter_products_all",
       "_type": "request",
-      "parentId": "fld_products",
+      "parentId": "fld_admin_products",
       "name": "Filter Products - All",
       "method": "GET",
       "url": "{{ _.base_url }}/filterProductList?category=All",
       "headers": [
-        { "name": "Accept", "value": "application/json" }
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.admin_token }}" }
+      ],
+      "body": {}
+    },
+
+    {
+      "_id": "fld_admin_orders",
+      "_type": "request_group",
+      "parentId": "wrk_jewelry_api",
+      "name": "Admin - Orders (Admin Auth)"
+    },
+    {
+      "_id": "req_get_all_orders",
+      "_type": "request",
+      "parentId": "fld_admin_orders",
+      "name": "Get All Order List",
+      "method": "GET",
+      "url": "{{ _.base_url }}/getAllOrderList",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.admin_token }}" }
       ],
       "body": {}
     },
     {
+      "_id": "req_order_search",
+      "_type": "request",
+      "parentId": "fld_admin_orders",
+      "name": "Search Orders",
+      "method": "GET",
+      "url": "{{ _.base_url }}/orderSearchList?search=Phnom",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.admin_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_filter_orders",
+      "_type": "request",
+      "parentId": "fld_admin_orders",
+      "name": "Filter Orders by Status",
+      "method": "GET",
+      "url": "{{ _.base_url }}/filterOrderList?status=pending",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.admin_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_filter_orders_all",
+      "_type": "request",
+      "parentId": "fld_admin_orders",
+      "name": "Filter Orders - All",
+      "method": "GET",
+      "url": "{{ _.base_url }}/filterOrderList?status=All",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.admin_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_view_order_items",
+      "_type": "request",
+      "parentId": "fld_admin_orders",
+      "name": "View Order Items",
+      "method": "GET",
+      "url": "{{ _.base_url }}/ViewOrderItemsList?oID=1",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.admin_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_view_order_items_detail",
+      "_type": "request",
+      "parentId": "fld_admin_orders",
+      "name": "View Order Items Detail",
+      "method": "GET",
+      "url": "{{ _.base_url }}/ViewOrderItemsDetail?oID=1",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.admin_token }}" }
+      ],
+      "body": {}
+    },
+
+    {
+      "_id": "fld_admin_shops",
+      "_type": "request_group",
+      "parentId": "wrk_jewelry_api",
+      "name": "Admin - Shops (Admin Auth)"
+    },
+    {
+      "_id": "req_get_all_shops",
+      "_type": "request",
+      "parentId": "fld_admin_shops",
+      "name": "Get All Shop List",
+      "method": "GET",
+      "url": "{{ _.base_url }}/getAllShopList",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.admin_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_shop_search",
+      "_type": "request",
+      "parentId": "fld_admin_shops",
+      "name": "Search Shops",
+      "method": "GET",
+      "url": "{{ _.base_url }}/shopSearchList?search=Diamond",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.admin_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_filter_shops",
+      "_type": "request",
+      "parentId": "fld_admin_shops",
+      "name": "Filter Shops by Name",
+      "method": "GET",
+      "url": "{{ _.base_url }}/filterShopList?Sname=Alpha",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.admin_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_filter_shops_all",
+      "_type": "request",
+      "parentId": "fld_admin_shops",
+      "name": "Filter Shops - All",
+      "method": "GET",
+      "url": "{{ _.base_url }}/filterShopList?Sname=All",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.admin_token }}" }
+      ],
+      "body": {}
+    },
+
+    {
+      "_id": "fld_admin_users",
+      "_type": "request_group",
+      "parentId": "wrk_jewelry_api",
+      "name": "Admin - Users (Admin Auth)"
+    },
+    {
+      "_id": "req_get_all_users",
+      "_type": "request",
+      "parentId": "fld_admin_users",
+      "name": "Get All User List",
+      "method": "GET",
+      "url": "{{ _.base_url }}/getAllUserList",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.admin_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_user_search",
+      "_type": "request",
+      "parentId": "fld_admin_users",
+      "name": "Search Users",
+      "method": "GET",
+      "url": "{{ _.base_url }}/userSearchList?search=John",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.admin_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_filter_users",
+      "_type": "request",
+      "parentId": "fld_admin_users",
+      "name": "Filter Users by Name",
+      "method": "GET",
+      "url": "{{ _.base_url }}/filterUserList?name=A",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.admin_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_filter_users_all",
+      "_type": "request",
+      "parentId": "fld_admin_users",
+      "name": "Filter Users - All",
+      "method": "GET",
+      "url": "{{ _.base_url }}/filterUserList?name=All",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.admin_token }}" }
+      ],
+      "body": {}
+    },
+
+    {
+      "_id": "fld_admin_dashboard",
+      "_type": "request_group",
+      "parentId": "wrk_jewelry_api",
+      "name": "Admin - Dashboard (Admin Auth)"
+    },
+    {
+      "_id": "req_dashboard_stats",
+      "_type": "request",
+      "parentId": "fld_admin_dashboard",
+      "name": "Dashboard Stats",
+      "method": "GET",
+      "url": "{{ _.base_url }}/dashboardStats",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.admin_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_chart_data",
+      "_type": "request",
+      "parentId": "fld_admin_dashboard",
+      "name": "Chart Data",
+      "method": "GET",
+      "url": "{{ _.base_url }}/chartData",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.admin_token }}" }
+      ],
+      "body": {}
+    },
+
+    {
+      "_id": "fld_public_products",
+      "_type": "request_group",
+      "parentId": "wrk_jewelry_api",
+      "name": "Public - Products"
+    },
+    {
       "_id": "req_show_product",
       "_type": "request",
-      "parentId": "fld_products",
+      "parentId": "fld_public_products",
       "name": "Show Single Product",
       "method": "GET",
       "url": "{{ _.base_url }}/product/1",
@@ -239,102 +538,60 @@
       "body": {}
     },
     {
-      "_id": "req_store_product",
+      "_id": "req_newest_products",
       "_type": "request",
-      "parentId": "fld_products",
-      "name": "Store Product (Auth Required)",
-      "method": "POST",
-      "url": "{{ _.base_url }}/product",
-      "headers": [
-        { "name": "Accept", "value": "application/json" },
-        { "name": "Authorization", "value": "Bearer {{ _.user_token }}" }
-      ],
-      "body": {
-        "mimeType": "multipart/form-data",
-        "params": [
-          { "name": "product_name", "value": "Gold Necklace", "type": "text" },
-          { "name": "product_category", "value": "Necklace", "type": "text" },
-          { "name": "product_price", "value": "250.00", "type": "text" },
-          { "name": "product_description", "value": "A beautiful gold necklace", "type": "text" },
-          { "name": "product_images[]", "value": "", "type": "file" }
-        ]
-      }
-    },
-    {
-      "_id": "req_edit_product",
-      "_type": "request",
-      "parentId": "fld_products",
-      "name": "Edit Product (Auth Required)",
+      "parentId": "fld_public_products",
+      "name": "Newest Products",
       "method": "GET",
-      "url": "{{ _.base_url }}/product/1/edit",
-      "headers": [
-        { "name": "Accept", "value": "application/json" },
-        { "name": "Authorization", "value": "Bearer {{ _.user_token }}" }
-      ],
-      "body": {}
-    },
-
-    {
-      "_id": "fld_orders",
-      "_type": "request_group",
-      "parentId": "wrk_jewelry_api",
-      "name": "Orders"
-    },
-    {
-      "_id": "req_get_all_orders",
-      "_type": "request",
-      "parentId": "fld_orders",
-      "name": "Get All Order List",
-      "method": "GET",
-      "url": "{{ _.base_url }}/getAllOrderList",
+      "url": "{{ _.base_url }}/products/newest",
       "headers": [
         { "name": "Accept", "value": "application/json" }
       ],
       "body": {}
     },
     {
-      "_id": "req_order_search",
+      "_id": "req_browse_products",
       "_type": "request",
-      "parentId": "fld_orders",
-      "name": "Search Orders",
+      "parentId": "fld_public_products",
+      "name": "Browse Products",
       "method": "GET",
-      "url": "{{ _.base_url }}/orderSearchList?search=Phnom",
+      "url": "{{ _.base_url }}/products/browse",
       "headers": [
         { "name": "Accept", "value": "application/json" }
       ],
       "body": {}
     },
     {
-      "_id": "req_filter_orders",
+      "_id": "req_browse_products_search",
       "_type": "request",
-      "parentId": "fld_orders",
-      "name": "Filter Orders by Status",
+      "parentId": "fld_public_products",
+      "name": "Browse Products (Search)",
       "method": "GET",
-      "url": "{{ _.base_url }}/filterOrderList?status=pending",
+      "url": "{{ _.base_url }}/products/browse?search=Gold",
       "headers": [
         { "name": "Accept", "value": "application/json" }
       ],
       "body": {}
     },
     {
-      "_id": "req_filter_orders_all",
+      "_id": "req_browse_products_category",
       "_type": "request",
-      "parentId": "fld_orders",
-      "name": "Filter Orders - All",
+      "parentId": "fld_public_products",
+      "name": "Browse Products (Category)",
       "method": "GET",
-      "url": "{{ _.base_url }}/filterOrderList?status=All",
+      "url": "{{ _.base_url }}/products/browse?category=Necklace",
       "headers": [
         { "name": "Accept", "value": "application/json" }
       ],
       "body": {}
     },
     {
-      "_id": "req_view_order_items",
+      "_id": "req_product_detail_cart",
       "_type": "request",
-      "parentId": "fld_orders",
-      "name": "View Order Items",
+      "parentId": "fld_public_products",
+      "name": "Get Product for Cart",
       "method": "GET",
-      "url": "{{ _.base_url }}/ViewOrderItemsList?oID=1",
+      "url": "{{ _.base_url }}/products/1/detail",
       "headers": [
         { "name": "Accept", "value": "application/json" }
       ],
@@ -342,109 +599,18 @@
     },
 
     {
-      "_id": "fld_shops",
+      "_id": "fld_public_shops",
       "_type": "request_group",
       "parentId": "wrk_jewelry_api",
-      "name": "Shops"
+      "name": "Public - Shops"
     },
     {
-      "_id": "req_get_all_shops",
+      "_id": "req_shop_public",
       "_type": "request",
-      "parentId": "fld_shops",
-      "name": "Get All Shop List",
+      "parentId": "fld_public_shops",
+      "name": "Shop Public Page",
       "method": "GET",
-      "url": "{{ _.base_url }}/getAllShopList",
-      "headers": [
-        { "name": "Accept", "value": "application/json" }
-      ],
-      "body": {}
-    },
-    {
-      "_id": "req_shop_search",
-      "_type": "request",
-      "parentId": "fld_shops",
-      "name": "Search Shops",
-      "method": "GET",
-      "url": "{{ _.base_url }}/shopSearchList?search=Diamond",
-      "headers": [
-        { "name": "Accept", "value": "application/json" }
-      ],
-      "body": {}
-    },
-    {
-      "_id": "req_filter_shops",
-      "_type": "request",
-      "parentId": "fld_shops",
-      "name": "Filter Shops by Name",
-      "method": "GET",
-      "url": "{{ _.base_url }}/filterShopList?Sname=Alpha",
-      "headers": [
-        { "name": "Accept", "value": "application/json" }
-      ],
-      "body": {}
-    },
-    {
-      "_id": "req_filter_shops_all",
-      "_type": "request",
-      "parentId": "fld_shops",
-      "name": "Filter Shops - All",
-      "method": "GET",
-      "url": "{{ _.base_url }}/filterShopList?Sname=All",
-      "headers": [
-        { "name": "Accept", "value": "application/json" }
-      ],
-      "body": {}
-    },
-
-    {
-      "_id": "fld_users",
-      "_type": "request_group",
-      "parentId": "wrk_jewelry_api",
-      "name": "Users"
-    },
-    {
-      "_id": "req_get_all_users",
-      "_type": "request",
-      "parentId": "fld_users",
-      "name": "Get All User List",
-      "method": "GET",
-      "url": "{{ _.base_url }}/getAllUserList",
-      "headers": [
-        { "name": "Accept", "value": "application/json" }
-      ],
-      "body": {}
-    },
-    {
-      "_id": "req_user_search",
-      "_type": "request",
-      "parentId": "fld_users",
-      "name": "Search Users",
-      "method": "GET",
-      "url": "{{ _.base_url }}/userSearchList?search=John",
-      "headers": [
-        { "name": "Accept", "value": "application/json" }
-      ],
-      "body": {}
-    },
-    {
-      "_id": "req_filter_users",
-      "_type": "request",
-      "parentId": "fld_users",
-      "name": "Filter Users by Name",
-      "method": "GET",
-      "url": "{{ _.base_url }}/filterUserList?name=A",
-      "headers": [
-        { "name": "Accept", "value": "application/json" }
-      ],
-      "body": {}
-    },
-    {
-      "_id": "req_filter_users_all",
-      "_type": "request",
-      "parentId": "fld_users",
-      "name": "Filter Users - All",
-      "method": "GET",
-      "url": "{{ _.base_url }}/filterUserList?name=All",
+      "url": "{{ _.base_url }}/shops/Gay/public",
       "headers": [
         { "name": "Accept", "value": "application/json" }
       ],
@@ -466,6 +632,312 @@
       "url": "{{ _.base_url }}/cart",
       "headers": [
         { "name": "Accept", "value": "application/json" }
+      ],
+      "body": {}
+    },
+
+    {
+      "_id": "fld_user_products",
+      "_type": "request_group",
+      "parentId": "wrk_jewelry_api",
+      "name": "User - Products (User Auth)"
+    },
+    {
+      "_id": "req_store_product",
+      "_type": "request",
+      "parentId": "fld_user_products",
+      "name": "Store Product",
+      "method": "POST",
+      "url": "{{ _.base_url }}/product",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.user_token }}" }
+      ],
+      "body": {
+        "mimeType": "multipart/form-data",
+        "params": [
+          { "name": "product_name", "value": "Gold Necklace", "type": "text" },
+          { "name": "product_category", "value": "Necklace", "type": "text" },
+          { "name": "product_price", "value": "250.00", "type": "text" },
+          { "name": "product_description", "value": "A beautiful gold necklace", "type": "text" },
+          { "name": "product_images[]", "value": "", "type": "file" }
+        ]
+      }
+    },
+    {
+      "_id": "req_edit_product",
+      "_type": "request",
+      "parentId": "fld_user_products",
+      "name": "Edit Product",
+      "method": "GET",
+      "url": "{{ _.base_url }}/product/1/edit",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.user_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_update_product",
+      "_type": "request",
+      "parentId": "fld_user_products",
+      "name": "Update Product",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/products/1",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.user_token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"product_name\": \"Updated Necklace\",\n  \"product_category\": \"Necklace\",\n  \"product_price\": 300.00,\n  \"product_description\": \"Updated description\"\n}"
+      }
+    },
+    {
+      "_id": "req_delete_product",
+      "_type": "request",
+      "parentId": "fld_user_products",
+      "name": "Delete Product",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/products/1",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.user_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_add_product_images",
+      "_type": "request",
+      "parentId": "fld_user_products",
+      "name": "Add Product Images",
+      "method": "POST",
+      "url": "{{ _.base_url }}/products/1/images",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.user_token }}" }
+      ],
+      "body": {
+        "mimeType": "multipart/form-data",
+        "params": [
+          { "name": "product_images[]", "value": "", "type": "file" }
+        ]
+      }
+    },
+    {
+      "_id": "req_delete_product_image",
+      "_type": "request",
+      "parentId": "fld_user_products",
+      "name": "Delete Product Image",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/products/1/images/1",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.user_token }}" }
+      ],
+      "body": {}
+    },
+
+    {
+      "_id": "fld_user_shops",
+      "_type": "request_group",
+      "parentId": "wrk_jewelry_api",
+      "name": "User - Shops (User Auth)"
+    },
+    {
+      "_id": "req_create_shop",
+      "_type": "request",
+      "parentId": "fld_user_shops",
+      "name": "Create Shop",
+      "method": "POST",
+      "url": "{{ _.base_url }}/shops",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.user_token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"shop_name\": \"My Jewelry Shop\",\n  \"shop_email\": \"shop@example.com\",\n  \"shop_phonenumber\": \"012345678\",\n  \"shop_address\": \"Phnom Penh\",\n  \"shop_description\": \"A beautiful jewelry shop\"\n}"
+      }
+    },
+    {
+      "_id": "req_get_user_shop",
+      "_type": "request",
+      "parentId": "fld_user_shops",
+      "name": "Get My Shop",
+      "method": "GET",
+      "url": "{{ _.base_url }}/shops/my-shop",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.user_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_shop_dashboard",
+      "_type": "request",
+      "parentId": "fld_user_shops",
+      "name": "Shop Dashboard",
+      "method": "GET",
+      "url": "{{ _.base_url }}/shops/my-dashboard",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.user_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_update_shop",
+      "_type": "request",
+      "parentId": "fld_user_shops",
+      "name": "Update Shop",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/shops/1",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.user_token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"shop_name\": \"Updated Shop Name\",\n  \"shop_email\": \"updated@example.com\",\n  \"shop_phonenumber\": \"098765432\",\n  \"shop_address\": \"Siem Reap\",\n  \"shop_description\": \"Updated description\"\n}"
+      }
+    },
+    {
+      "_id": "req_update_shop_picture",
+      "_type": "request",
+      "parentId": "fld_user_shops",
+      "name": "Update Shop Picture",
+      "method": "POST",
+      "url": "{{ _.base_url }}/shops/1/picture",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.user_token }}" }
+      ],
+      "body": {
+        "mimeType": "multipart/form-data",
+        "params": [
+          { "name": "shop_profilepic", "value": "", "type": "file" }
+        ]
+      }
+    },
+
+    {
+      "_id": "fld_user_orders",
+      "_type": "request_group",
+      "parentId": "wrk_jewelry_api",
+      "name": "User - Orders (User Auth)"
+    },
+    {
+      "_id": "req_create_order",
+      "_type": "request",
+      "parentId": "fld_user_orders",
+      "name": "Create Order",
+      "method": "POST",
+      "url": "{{ _.base_url }}/orders",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.user_token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"total_amount\": 250.00,\n  \"delivery_address\": \"Phnom Penh, Cambodia\",\n  \"cart\": {\n    \"1\": { \"price\": 250.00 }\n  }\n}"
+      }
+    },
+    {
+      "_id": "req_accept_order",
+      "_type": "request",
+      "parentId": "fld_user_orders",
+      "name": "Accept Order",
+      "method": "POST",
+      "url": "{{ _.base_url }}/orders/accept/1",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.user_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_reject_order",
+      "_type": "request",
+      "parentId": "fld_user_orders",
+      "name": "Reject Order",
+      "method": "POST",
+      "url": "{{ _.base_url }}/orders/reject/1",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.user_token }}" }
+      ],
+      "body": {}
+    },
+    {
+      "_id": "req_user_orders",
+      "_type": "request",
+      "parentId": "fld_user_orders",
+      "name": "My Orders",
+      "method": "GET",
+      "url": "{{ _.base_url }}/user/orders",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.user_token }}" }
+      ],
+      "body": {}
+    },
+
+    {
+      "_id": "fld_user_profile",
+      "_type": "request_group",
+      "parentId": "wrk_jewelry_api",
+      "name": "User - Profile (User Auth)"
+    },
+    {
+      "_id": "req_update_avatar",
+      "_type": "request",
+      "parentId": "fld_user_profile",
+      "name": "Update Avatar",
+      "method": "POST",
+      "url": "{{ _.base_url }}/user/avatar",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.user_token }}" }
+      ],
+      "body": {
+        "mimeType": "multipart/form-data",
+        "params": [
+          { "name": "profilepic", "value": "", "type": "file" }
+        ]
+      }
+    },
+    {
+      "_id": "req_update_profile",
+      "_type": "request",
+      "parentId": "fld_user_profile",
+      "name": "Update Profile",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/user/profile",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.user_token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Updated Name\",\n  \"email\": \"updated@example.com\",\n  \"phonenumber\": \"098765432\",\n  \"address\": \"Siem Reap\"\n}"
+      }
+    },
+    {
+      "_id": "req_delete_profile",
+      "_type": "request",
+      "parentId": "fld_user_profile",
+      "name": "Delete Profile",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/user/profile",
+      "headers": [
+        { "name": "Accept", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.user_token }}" }
       ],
       "body": {}
     }

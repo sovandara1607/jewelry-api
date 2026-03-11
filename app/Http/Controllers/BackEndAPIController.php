@@ -150,7 +150,7 @@ class BackEndAPIController extends Controller
 
         return response()->json(
             [
-                '$vorderList' => $v_orderList
+                'vorderList' => $v_orderList
             ],
             200
         );
