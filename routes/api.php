@@ -20,6 +20,44 @@ Route::get('/testAPI', function () {
     );
 });
 
+// Debug image upload endpoint
+Route::post('/debug-upload', function (Request $request) {
+    $debug = [
+        'has_files' => $request->hasFile('product_images'),
+        'files_count' => $request->hasFile('product_images') ? count($request->file('product_images')) : 0,
+        'all_keys' => array_keys($request->all()),
+        'storage_path' => storage_path('app/public'),
+        'storage_writable' => is_writable(storage_path('app/public')),
+        'product_images_dir_writable' => is_writable(storage_path('app/public/product-images')),
+    ];
+
+    if ($request->hasFile('product_images')) {
+        try {
+            $file = $request->file('product_images')[0];
+            $debug['file_info'] = [
+                'original_name' => $file->getClientOriginalName(),
+                'mime_type' => $file->getMimeType(),
+                'size' => $file->getSize(),
+                'is_valid' => $file->isValid(),
+                'error' => $file->getError()
+            ];
+
+            // Try to store the file
+            $path = $file->store('product-images', 'public');
+            $debug['upload_result'] = [
+                'success' => true,
+                'path' => $path,
+                'full_path' => storage_path('app/public/' . $path),
+                'file_exists' => file_exists(storage_path('app/public/' . $path))
+            ];
+        } catch (\Exception $e) {
+            $debug['upload_error'] = $e->getMessage();
+        }
+    }
+
+    return response()->json($debug);
+});
+
 //User Routes
 Route::prefix('user')->group(function () {
 
