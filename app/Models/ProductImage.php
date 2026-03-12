@@ -26,6 +26,7 @@ class ProductImage extends Model
     /**
      * Get the full URL for the image.
      * Handles both external URLs and local storage paths.
+     * Provides fallback for missing files.
      */
     public function getImageUrlAttribute(): ?string
     {
@@ -38,8 +39,14 @@ class ProductImage extends Model
             return $this->image_path;
         }
 
-        // Otherwise, it's a local storage path - return full URL
-        return Storage::url($this->image_path);
+        // For local storage paths, check if file exists
+        if (Storage::disk('public')->exists($this->image_path)) {
+            return Storage::url($this->image_path);
+        }
+
+        // Fallback to placeholder image if file doesn't exist
+        $productId = $this->product_id ?? 1;
+        return "https://picsum.photos/seed/jewelry{$productId}/400/400";
     }
 
     /**
