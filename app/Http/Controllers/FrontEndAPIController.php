@@ -517,4 +517,50 @@ class FrontEndAPIController extends Controller
         }
         return response()->json(['message' => 'Logged out.'], 200);
     }
+
+    // Debug upload functionality
+    public function debugUpload(Request $request)
+    {
+        $debugInfo = [
+            'has_files' => $request->hasFile('product_images'),
+            'files_count' => $request->hasFile('product_images') ? count($request->file('product_images')) : 0,
+            'all_input' => $request->all(),
+            'file_info' => [],
+            'storage_config' => config('filesystems.disks.public'),
+            'storage_path' => storage_path('app/public'),
+            'storage_exists' => is_dir(storage_path('app/public')),
+            'storage_writable' => is_writable(storage_path('app/public')),
+        ];
+
+        if ($request->hasFile('product_images')) {
+            foreach ($request->file('product_images') as $key => $file) {
+                $debugInfo['file_info'][$key] = [
+                    'original_name' => $file->getClientOriginalName(),
+                    'mime_type' => $file->getMimeType(),
+                    'size' => $file->getSize(),
+                    'is_valid' => $file->isValid(),
+                    'error' => $file->getError(),
+                ];
+            }
+
+            // Try to store one file for testing
+            try {
+                $file = $request->file('product_images')[0];
+                $path = $file->store('product-images', 'public');
+                $debugInfo['test_upload'] = [
+                    'success' => true,
+                    'path' => $path,
+                    'full_path' => storage_path('app/public/' . $path),
+                    'file_exists' => Storage::disk('public')->exists($path),
+                ];
+            } catch (\Exception $e) {
+                $debugInfo['test_upload'] = [
+                    'success' => false,
+                    'error' => $e->getMessage(),
+                ];
+            }
+        }
+
+        return response()->json($debugInfo);
+    }
 }
