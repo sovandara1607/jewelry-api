@@ -13,11 +13,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        // User::factory()->create([
-        //     'name' => 'Test User1',
-        //     'email' => 'test1@example.com',
-        // ]);
+        // Run all seeders in order (respecting foreign key constraints)
+        $this->call([
+            UserSeeder::class,           // Must be first - shops depend on users
+            AdminSeeder::class,          // Independent
+            ShopSeeder::class,           // Depends on users
+            UpdatedProductSeeder::class, // Depends on shops
+            ProductImageSeeder::class,   // Depends on products
+            OrderSeeder::class,          // Depends on users
+            OrderItemSeeder::class,      // Depends on orders and products
+        ]);
     }
 }
