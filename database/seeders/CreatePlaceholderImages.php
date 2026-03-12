@@ -32,24 +32,61 @@ class CreatePlaceholderImages extends Seeder
          }
 
          try {
-            // Generate a unique placeholder image for each file
-            $placeholderUrl = "https://picsum.photos/seed/jewelry{$imageCounter}/400/400";
+            // Use jewelry-specific keywords for better placeholder images
+            $jewelryKeywords = [
+               'jewelry',
+               'necklace',
+               'earrings',
+               'bracelet',
+               'ring',
+               'gold',
+               'silver',
+               'diamond',
+               'pendant',
+               'chain',
+               'gemstone',
+               'luxury',
+               'fashion',
+               'accessories'
+            ];
 
-            // Download the placeholder image
-            $response = Http::timeout(10)->get($placeholderUrl);
+            $keyword = $jewelryKeywords[array_rand($jewelryKeywords)];
 
-            if ($response->successful()) {
-               // Save the image with the original filename
-               Storage::disk('public')->put($imagePath, $response->body());
-               echo "Created: {$imagePath}\n";
-            } else {
-               echo "Failed to download for: {$imagePath}\n";
+            // Try jewelry-specific image sources first
+            $jewelryUrls = [
+               "https://source.unsplash.com/400x400/?{$keyword},jewelry",
+               "https://source.unsplash.com/400x400/?gold,{$keyword}",
+               "https://source.unsplash.com/400x400/?silver,{$keyword}",
+               "https://picsum.photos/seed/jewelry{$imageCounter}/400/400"
+            ];
+
+            $downloaded = false;
+
+            foreach ($jewelryUrls as $url) {
+               try {
+                  // Download the image
+                  $response = Http::timeout(10)->get($url);
+
+                  if ($response->successful() && strlen($response->body()) > 1000) {
+                     // Save the image with the original filename
+                     Storage::disk('public')->put($imagePath, $response->body());
+                     echo "Created: {$imagePath} from {$keyword}\n";
+                     $downloaded = true;
+                     break;
+                  }
+               } catch (\Exception $e) {
+                  continue; // Try next URL
+               }
+            }
+
+            if (!$downloaded) {
+               echo "Failed to download jewelry images for: {$imagePath}\n";
             }
 
             $imageCounter++;
 
-            // Small delay to be respectful to the API
-            usleep(100000); // 0.1 second
+            // Small delay to be respectful to the APIs
+            usleep(200000); // 0.2 second
 
          } catch (\Exception $e) {
             echo "Error creating {$imagePath}: {$e->getMessage()}\n";
