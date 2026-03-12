@@ -184,11 +184,30 @@ class FrontEndAPIController extends Controller
             'product_category' => 'required|string|max:50',
             'product_price' => 'required|numeric|min:0',
             'product_description' => 'nullable|string',
+            'product_images' => 'nullable|array',
+            'product_images.*' => 'image|mimes:jpeg,png,jpg,gif,webp,svg|max:10240',
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-        $product->update($validator->validated());
+
+        // Update product basic info
+        $product->update($validator->safe()->only([
+            'product_name',
+            'product_category',
+            'product_price',
+            'product_description'
+        ]));
+
+        // Handle new image uploads
+        if ($request->hasFile('product_images')) {
+            foreach ($request->file('product_images') as $file) {
+                $path = $file->store('product-images', 'public');
+                $product->images()->create(['image_path' => $path]);
+            }
+        }
+
+        $product->load('images');
         return response()->json(['message' => 'Product updated.', 'product' => $product], 200);
     }
 
