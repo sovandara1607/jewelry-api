@@ -1,12 +1,38 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\AdminProductController;
 use App\Http\Controllers\AdminShopController;
 use App\Http\Controllers\AdminUserController;
+
+Route::get('/', function () {
+   // Check system health
+   $databaseStatus = 'connected';
+   try {
+      DB::connection()->getPdo();
+   } catch (\Exception $e) {
+      $databaseStatus = 'disconnected';
+   }
+
+   $appName = config('app.name', 'Jewelry API');
+   $version = config('app.api_version', '1.0.0');
+   $environment = app()->environment();
+   $laravelVersion = app()->version();
+   $phpVersion = PHP_VERSION;
+
+   return response()->view('welcome-api', compact(
+      'appName',
+      'version',
+      'environment',
+      'laravelVersion',
+      'phpVersion',
+      'databaseStatus'
+   ));
+});
 
 //All BackEnd Routes--
 //127.0.0.1:8000/AdminLogin
